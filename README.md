@@ -29,42 +29,7 @@ raw data, Silver the cleaned data, and Gold the business-ready models.
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    SRC[("Source CSV files<br/>customers, products,<br/>orders, order_items")]
-
-    subgraph GCP["Google Cloud project (region asia-southeast2)"]
-        subgraph GCS["Cloud Storage (one bucket)"]
-            BRZ[("bronze/<br/>raw CSV, unchanged")]
-            SLV[("silver/<br/>clean Parquet")]
-        end
-
-        SPARK["Dataproc Serverless<br/>PySpark job"]
-
-        subgraph BQ["BigQuery"]
-            BQS[("silver dataset<br/>4 tables")]
-            BQG[("gold dataset<br/>star schema + marts")]
-        end
-
-        CHK{{"Quality gate<br/>check_gold"}}
-        COMP{{"Cloud Composer<br/>Airflow DAG"}}
-    end
-
-    USE["Analytics<br/>(SQL queries)"]
-
-    SRC -->|upload| BRZ
-    BRZ --> SPARK
-    SPARK --> SLV
-    SLV -->|load| BQS
-    BQS -->|SQL transform| BQG
-    BQG --> CHK
-    BQG --> USE
-
-    COMP -.->|orchestrates| SPARK
-    COMP -.->|orchestrates| BQS
-    COMP -.->|orchestrates| BQG
-    COMP -.->|orchestrates| CHK
-```
+![Architecture of the medallion pipeline on Google Cloud](docs/diagrams/architecture-diagram.png)
 
 All components run as a single service account, `medallion-sa`.
 
