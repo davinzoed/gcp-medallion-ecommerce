@@ -277,7 +277,9 @@ gcp-medallion-ecommerce/
 │       ├── mart_daily_sales.sql
 │       ├── mart_category_sales.sql
 │       └── check_gold.sql
-├── docs/screenshots/
+├── docs/
+│   ├── diagrams/                 # Architecture diagram
+│   └── screenshots/              # Run evidence
 └── README.md
 ```
 
